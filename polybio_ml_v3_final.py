@@ -13,13 +13,25 @@ Papers:
 Install:  pip install streamlit plotly pandas numpy scikit-learn
 Run:      streamlit run polybio_ml_v2.py
 """
-import math, re, pickle, os, warnings, io
+import math, re, pickle, os, warnings, io, sys, subprocess
 import numpy as np
 import pandas as pd
-from sklearn.ensemble import GradientBoostingRegressor
 import plotly.graph_objects as go
 import streamlit as st
-warnings.filterwarnings("ignore", category=UserWarning, module="sklearn")
+warnings.filterwarnings("ignore")
+
+# ── Auto-install missing packages (Streamlit Cloud safe) ─────────────────────
+def _ensure(pkg, import_name=None):
+    import_name = import_name or pkg
+    try:
+        __import__(import_name)
+    except ImportError:
+        subprocess.check_call([sys.executable, "-m", "pip", "install", pkg, "-q"])
+
+_ensure("scikit-learn", "sklearn")
+_ensure("openpyxl")
+
+from sklearn.ensemble import GradientBoostingRegressor
 
 # ─────────────────────────────────────────────────────────────────────────────
 # PAGE CONFIG
